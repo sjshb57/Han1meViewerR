@@ -3,10 +3,6 @@ package com.yenaly.han1meviewer.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
-import com.google.firebase.Firebase
-import com.google.firebase.crashlytics.crashlytics
-import com.google.firebase.crashlytics.setCustomKeys
-import com.yenaly.han1meviewer.FirebaseConstants
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.NetworkRepo
 import com.yenaly.han1meviewer.logic.model.github.Latest
@@ -44,16 +40,12 @@ object AppViewModel : YenalyViewModel(application), IHCsrfToken {
         WorkManager.getInstance(application).pruneWork()
 
         viewModelScope.launch(Dispatchers.IO) {
-            // HanimeDownloadManager.init()
             HanimeDownloadManagerV2.init()
         }
 
         viewModelScope.launch(Dispatchers.Main) {
             Preferences.loginStateFlow.collect { isLogin ->
                 Log.d("LoginState", "isLogin: $isLogin")
-                Firebase.crashlytics.setCustomKeys {
-                    key(FirebaseConstants.LOGIN_STATE, isLogin)
-                }
             }
         }
 
@@ -65,9 +57,6 @@ object AppViewModel : YenalyViewModel(application), IHCsrfToken {
             HanimeDownloadWorker.getRunningWorkInfoCount(application).collect { count ->
                 Log.d(HanimeDownloadWorker.TAG, "getRunningWorkInfoCount: $count")
                 runningWorkInfoCountFlow.value = count
-                Firebase.crashlytics.setCustomKeys {
-                    key(FirebaseConstants.RUNNING_DOWNLOAD_WORK_COUNT, count)
-                }
             }
         }
     }

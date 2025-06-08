@@ -1,5 +1,4 @@
-@file:Suppress("unused")
-@file:JvmName("ContextUtil")
+// com.yenaly.yenaly_libs.utils.ContextUtil.kt
 
 package com.yenaly.yenaly_libs.utils
 
@@ -22,7 +21,16 @@ import com.yenaly.yenaly_libs.ActivityManager
  */
 @set:JvmSynthetic
 lateinit var applicationContext: Context
-    internal set
+    internal set // 只能在 yenaly_libs 模块内部设置
+
+/**
+ * **新增：用于在 Application 初始化时设置全局 Context**
+ */
+fun initApplicationContext(context: Context) {
+    if (!::applicationContext.isInitialized) { // 避免重复初始化
+        applicationContext = context.applicationContext
+    }
+}
 
 /**
  * Get the application instance.

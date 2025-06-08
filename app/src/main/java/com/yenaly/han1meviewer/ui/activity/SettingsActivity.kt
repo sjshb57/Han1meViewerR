@@ -16,7 +16,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.databinding.ActivitySettingsBinding
 import com.yenaly.han1meviewer.ui.viewmodel.SettingsViewModel
-import com.yenaly.han1meviewer.util.logScreenViewEvent
 import com.yenaly.yenaly_libs.base.YenalyActivity
 
 /**
@@ -35,10 +34,6 @@ class SettingsActivity : YenalyActivity<ActivitySettingsBinding>() {
 
     override fun getViewBinding(layoutInflater: LayoutInflater): ActivitySettingsBinding =
         ActivitySettingsBinding.inflate(layoutInflater)
-
-    override val onFragmentResumedListener: (Fragment) -> Unit = { fragment ->
-        logScreenViewEvent(fragment)
-    }
 
     override fun setUiStyle() {
         enableEdgeToEdge(

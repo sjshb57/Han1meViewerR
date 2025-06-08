@@ -12,9 +12,6 @@ plugins {
     alias(libs.plugins.org.jetbrains.kotlin.plugin.parcelize)
     alias(libs.plugins.org.jetbrains.kotlin.plugin.serialization)
     alias(libs.plugins.com.google.devtools.ksp)
-    alias(libs.plugins.com.google.gms.google.services)
-    alias(libs.plugins.com.google.firebase.crashlytics)
-    alias(libs.plugins.com.google.firebase.firebase.pref)
     // alias(libs.plugins.compose.compiler)
 }
 
@@ -62,8 +59,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            signingConfig = signConfig
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -162,14 +158,6 @@ dependencies {
     implementation(libs.about)
     implementation(libs.statelayout)
     implementation(libs.circular.reveal.switch)
-
-    // firebase
-
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.perf)
-    implementation(libs.firebase.config)
 
     ksp(libs.room.compiler)
 

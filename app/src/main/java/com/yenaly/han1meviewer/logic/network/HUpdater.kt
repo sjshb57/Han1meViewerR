@@ -1,10 +1,7 @@
 package com.yenaly.han1meviewer.logic.network
 
 import android.util.Log
-import com.google.firebase.Firebase
-import com.google.firebase.remoteconfig.remoteConfig
 import com.yenaly.han1meviewer.BuildConfig
-import com.yenaly.han1meviewer.FirebaseConstants
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.logic.model.github.CommitComparison
 import com.yenaly.han1meviewer.logic.model.github.Latest
@@ -40,39 +37,14 @@ object HUpdater {
         // 如果未设置HA1_GITHUB_TOKEN，则不检测版本更新
         if (BuildConfig.HA1_GITHUB_TOKEN.isEmpty()) return null
         if (forceCheck || Preferences.isUpdateDialogVisible) {
-            if (Preferences.useCIUpdateChannel && Firebase.remoteConfig.getBoolean(FirebaseConstants.ENABLE_CI_UPDATE)) {
-                val curSha = BuildConfig.COMMIT_SHA
-                // 特殊情况下才用注释部分，一般情况下 branch 都是固定的，要不然多一次
-                // request 会对我的 API Token 造成负担。
-                // val apiReq = request(HA1_GITHUB_API_URL)
-                // val branch = apiReq.body?.string()?.let(::JSONObject)?.getString("default_branch")
-                //     ?: return null
-                val workflowRun = HanimeNetwork.githubService.getWorkflowRuns()
-                    .workflowRuns.firstOrNull() ?: return null
-                val shortSha = workflowRun.headSha.take(7)
-                if (shortSha != curSha) {
-                    val artifacts =
-                        HanimeNetwork.githubService.getArtifacts(workflowRun.artifactsUrl)
-                    val archiveUrl = artifacts.downloadLink
-                    val nodeId = artifacts.nodeId
-                    val changelog = runSuspendCatching {
-                        HanimeNetwork.githubService.getCommitComparison(
-                            curSha = curSha,
-                            latestSha = shortSha
-                        ).commits.toChangelogPrettyString()
-                    }.getOrNull() ?: workflowRun.title
-                    return Latest("$shortSha (CI)", changelog, archiveUrl, nodeId)
-                }
-            } else {
-                val ver = HanimeNetwork.githubService.getLatestVersion()
-                val isNeeded = checkNeedUpdate(ver.tagName)
-                if (isNeeded) {
-                    return Latest(
-                        ver.tagName, ver.body,
-                        ver.assets.first().browserDownloadURL,
-                        ver.assets.first().nodeID
-                    )
-                }
+            val ver = HanimeNetwork.githubService.getLatestVersion()
+            val isNeeded = checkNeedUpdate(ver.tagName)
+            if (isNeeded) {
+                return Latest(
+                    ver.tagName, ver.body,
+                    ver.assets.first().browserDownloadURL,
+                    ver.assets.first().nodeID
+                )
             }
         }
         return null

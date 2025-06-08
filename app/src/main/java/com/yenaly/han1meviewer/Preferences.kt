@@ -42,7 +42,9 @@ object Preferences {
             putSpValue(ALREADY_LOGIN, value)
         }
 
-    val loginStateFlow = MutableStateFlow(isAlreadyLogin)
+    val loginStateFlow by lazy {
+        MutableStateFlow(isAlreadyLogin)
+    }
 
     /**
      * 保存的string格式的登入cookie
@@ -54,7 +56,9 @@ object Preferences {
             putSpValue(LOGIN_COOKIE, value.cookie)
         }
 
-    val loginCookieStateFlow = MutableStateFlow(loginCookie)
+    val loginCookieStateFlow by lazy {
+        MutableStateFlow(loginCookie)
+    }
 
     // 更新 相關
 
@@ -70,9 +74,6 @@ object Preferences {
 
     val updatePopupIntervalDays
         get() = preferenceSp.getInt(HomeSettingsFragment.UPDATE_POPUP_INTERVAL_DAYS, 0)
-
-    val useCIUpdateChannel
-        get() = preferenceSp.getBoolean(HomeSettingsFragment.USE_CI_UPDATE_CHANNEL, false)
 
     // Check if show update dialog.
     val isUpdateDialogVisible: Boolean
@@ -170,11 +171,6 @@ object Preferences {
 
     val proxyPort: Int
         get() = preferenceSp.getInt(NetworkSettingsFragment.PROXY_PORT, -1)
-
-    // 隐私 相關
-
-    val isAnalyticsEnabled: Boolean
-        get() = preferenceSp.getBoolean(HomeSettingsFragment.USE_ANALYTICS, true)
 
     // 下载 相關
 

@@ -45,7 +45,6 @@ import com.yenaly.han1meviewer.ui.fragment.search.HMultiChoicesDialog
 import com.yenaly.han1meviewer.ui.fragment.search.SearchOptionsPopupFragment
 import com.yenaly.han1meviewer.ui.viewmodel.MyListViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.SearchViewModel
-import com.yenaly.han1meviewer.util.logScreenViewEvent
 import com.yenaly.yenaly_libs.base.YenalyActivity
 import com.yenaly.yenaly_libs.utils.dp
 import com.yenaly.yenaly_libs.utils.intentExtra
@@ -92,10 +91,6 @@ class SearchActivity : YenalyActivity<ActivitySearchBinding>(), StateLayoutMixin
 
     override fun getViewBinding(layoutInflater: LayoutInflater): ActivitySearchBinding =
         ActivitySearchBinding.inflate(layoutInflater)
-
-    override val onFragmentResumedListener: (Fragment) -> Unit = { fragment ->
-        logScreenViewEvent(fragment)
-    }
 
     override fun setUiStyle() {
         enableEdgeToEdge(

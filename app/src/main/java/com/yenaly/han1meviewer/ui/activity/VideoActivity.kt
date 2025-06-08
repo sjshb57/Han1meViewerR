@@ -22,13 +22,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import cn.jzvd.JZMediaInterface
 import cn.jzvd.Jzvd
 import coil.load
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.analytics
-import com.google.firebase.analytics.logEvent
 import com.yenaly.han1meviewer.COMMENT_TYPE
 import com.yenaly.han1meviewer.FROM_DOWNLOAD
-import com.yenaly.han1meviewer.FirebaseConstants
 import com.yenaly.han1meviewer.Preferences
 import com.yenaly.han1meviewer.R
 import com.yenaly.han1meviewer.VIDEO_CODE
@@ -46,7 +41,6 @@ import com.yenaly.han1meviewer.ui.view.video.HanimeDataSource
 import com.yenaly.han1meviewer.ui.viewmodel.CommentViewModel
 import com.yenaly.han1meviewer.ui.viewmodel.VideoViewModel
 import com.yenaly.han1meviewer.util.getOrCreateBadgeOnTextViewAt
-import com.yenaly.han1meviewer.util.logScreenViewEvent
 import com.yenaly.han1meviewer.util.showAlertDialog
 import com.yenaly.yenaly_libs.base.YenalyActivity
 import com.yenaly.yenaly_libs.utils.OrientationManager
@@ -79,9 +73,7 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
     override fun getViewBinding(layoutInflater: LayoutInflater): ActivityVideoBinding =
         ActivityVideoBinding.inflate(layoutInflater)
 
-    override val onFragmentResumedListener: (Fragment) -> Unit = { fragment ->
-        logScreenViewEvent(fragment)
-    }
+    override val onFragmentResumedListener: (Fragment) -> Unit = { _ -> }
 
     override fun setUiStyle() {
         enableEdgeToEdge(
@@ -139,9 +131,7 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
                             finish()
                         }
 
-                        is VideoLoadingState.Loading -> {
-
-                        }
+                        is VideoLoadingState.Loading -> {}
 
                         is VideoLoadingState.Success -> {
                             videoTitle = state.info.title
@@ -222,20 +212,13 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
         }
     }
 
-    /**
-     * 竖屏并退出全屏
-     */
     private fun changeScreenNormal() {
         if (binding.videoPlayer.screen == Jzvd.SCREEN_FULLSCREEN) {
             binding.videoPlayer.gotoNormalScreen()
         }
     }
 
-    /**
-     * 横屏
-     */
     private fun changeScreenFullLandscape(orientation: OrientationManager.ScreenOrientation) {
-        //从竖屏状态进入横屏
         if (binding.videoPlayer.screen != Jzvd.SCREEN_FULLSCREEN) {
             if (System.currentTimeMillis() - Jzvd.lastAutoFullscreenTime > 2000) {
                 binding.videoPlayer.autoFullscreen(orientation)
@@ -261,7 +244,6 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
 
     private fun initHKeyframe() {
         binding.videoPlayer.onGoHomeClickListener = { _ ->
-            // singleTask 直接把所有 VideoActivity 都 finish 掉
             startActivity<MainActivity>()
         }
         binding.videoPlayer.onKeyframeClickListener = { v ->
@@ -283,20 +265,9 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
                             videoTitle ?: "Untitled",
                             HKeyframeEntity.Keyframe(
                                 position = currentPosition,
-                                prompt = null // 這裏不要給太多負擔，保存就行了沒必要寫comment
+                                prompt = null
                             )
                         )
-                        // 使用到这里说明用户可能是关键H帧目标用户
-                        Firebase.analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT) {
-                            param(
-                                FirebaseAnalytics.Param.ITEM_ID,
-                                FirebaseConstants.H_KEYFRAMES
-                            )
-                            param(
-                                FirebaseAnalytics.Param.CONTENT_TYPE,
-                                FirebaseConstants.H_KEYFRAMES
-                            )
-                        }
                     }
                     setNegativeButton(R.string.cancel, null)
                 }
