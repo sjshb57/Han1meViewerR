@@ -34,7 +34,7 @@ abstract class DownloadDatabase : RoomDatabase() {
                 DownloadDatabase::class.java,
                 "download.db"
             )
-                .fallbackToDestructiveMigration() // 添加这行，会在数据库版本变化时清空重建
+                .fallbackToDestructiveMigration() // 此行会在数据库版本变化时清空重建
                 .addMigrations(Migration1To2, Migration2To3) // 保留原有迁移策略
                 .build()
         }
