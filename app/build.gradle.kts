@@ -55,6 +55,8 @@ android {
         buildConfigField("String", "HA1_VERSION_SOURCE", "\"${source}\"")
 
         buildConfigField("int", "SEARCH_YEAR_RANGE_END", "${Config.thisYear}")
+
+        resConfigs("zh","zh-rCN","zh-rTW","ja","ja-rJP")
     }
 
     buildTypes {
