@@ -1,6 +1,7 @@
 name: Android CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [ feat/new_download ]
 
@@ -33,14 +34,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Build and sign with Gradle
+        run: |
+          ./gradlew assembleDebug assembleRelease
+
       - name: Debug APK Paths
         run: |
           echo "===== 所有APK文件 ====="
           find app/build/outputs -name "*.apk" -exec ls -la {} \;
-
-      - name: Build and sign with Gradle
-        run: |
-          ./gradlew assembleDebug assembleRelease
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
