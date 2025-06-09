@@ -1,6 +1,6 @@
 [versions]
 # Plugins
-androidGradle = "8.9.0"
+androidGradle = "8.10.1"
 kotlin = "2.1.21"
 serializationPlugin = "2.1.21"
 ksp = "2.1.21-2.0.1"

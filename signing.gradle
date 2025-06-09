@@ -1,0 +1,70 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+android {
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            def propertiesFile = rootProject.file('signing.properties')
+            if (propertiesFile.exists()) {
+                propertiesFile.withInputStream { stream ->
+                    properties.load(stream)
+                }
+            }
+
+            def keystoreBase64 = System.getenv("STORE_FILE_BASE64")?.trim()
+            if (keystoreBase64) {
+                def tempKeystoreFile = file("${rootProject.projectDir}/temp_keystore.jks")
+                try {
+                    tempKeystoreFile.withOutputStream { os ->
+                        byte[] decodedBytes = keystoreBase64.decodeBase64()
+                        if (decodedBytes == null || decodedBytes.length == 0) {
+                            throw new GradleException("BASE64解码失败！请检查STORE_FILE_BASE64内容是否有效且纯净（无空格、无换行）")
+                        }
+                        os.write(decodedBytes)
+                    }
+
+                    if (!tempKeystoreFile.exists() || tempKeystoreFile.length() == 0) {
+                        throw new GradleException("临时密钥文件创建失败或为空！")
+                    }
+
+                    storeFile tempKeystoreFile
+                    storePassword System.getenv("STORE_PASSWORD") ?: ""
+                    keyAlias System.getenv("KEY_ALIAS") ?: ""
+                    keyPassword System.getenv("KEY_PASSWORD") ?: ""
+
+                    gradle.buildFinished {
+                        if (tempKeystoreFile.exists()) {
+                            tempKeystoreFile.delete()
+                        }
+                    }
+                } catch (Exception e) {
+                    if (tempKeystoreFile.exists()) {
+                        tempKeystoreFile.delete()
+                    }
+                    throw new GradleException("签名配置失败，请检查环境变量和Base64内容: ${e.message}", e)
+                }
+            }
+            else {
+                def getConfigValue = { String name, String envName ->
+                    return properties[name] ?: System.getenv(envName)
+                }
+
+                def storeFileValue = getConfigValue('storeFile', 'STORE_FILE')
+                if (storeFileValue) {
+                    storeFile file(storeFileValue)
+                    storePassword getConfigValue('storePassword', 'STORE_PASSWORD') ?: ""
+                    keyAlias getConfigValue('keyAlias', 'KEY_ALIAS') ?: ""
+                    keyPassword getConfigValue('keyPassword', 'KEY_PASSWORD') ?: ""
+                }
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+        }
+
+    }
+}

@@ -56,12 +56,14 @@ android {
 
         buildConfigField("int", "SEARCH_YEAR_RANGE_END", "${Config.thisYear}")
 
+        @Suppress("DEPRECATION")
         resConfigs("zh","zh-rCN","zh-rTW","ja","ja-rJP")
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
@@ -69,6 +71,18 @@ android {
                 this@variant.outputs.all output@{
                     val output = this@output as BaseVariantOutputImpl
                     output.outputFileName = "Han1meViewer-v${defaultConfig.versionName}.apk"
+                }
+            }
+        }
+
+        create("releaseNoObfuscate") {
+            initWith(getByName("release"))
+            isMinifyEnabled = false
+            isShrinkResources = false
+            applicationVariants.all {
+                outputs.all {
+                    val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+                    output.outputFileName = "Han1meViewer-v${defaultConfig.versionName}R.apk"
                 }
             }
         }

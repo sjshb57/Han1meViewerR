@@ -6,4 +6,4 @@
 
 #### To use this application, your Android version must be **no less than 7.0**.
 
-## 使用此构建请注意，安装后可能会导致下载目录清除，请确认无影响后使用。
+## 请注意：使用此构建可能会导致下载目录清除，请确认无误后安装。
