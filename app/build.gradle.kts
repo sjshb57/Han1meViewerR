@@ -89,7 +89,7 @@ android {
             )
             applicationVariants.all {
                 outputs.all {
-                    val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+                    val output = this as BaseVariantOutputImpl
                     output.outputFileName = "Han1meViewer-releaseNoObfuscate-v${defaultConfig.versionName}.apk"
                 }
             }

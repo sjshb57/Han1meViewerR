@@ -34,11 +34,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build and sign with Gradle
+      - name: Build all APK variants
         run: |
-          ./gradlew assembleDebug assembleRelease
+          ./gradlew assembleDebug assembleRelease assembleReleaseNoObfuscate
 
-      - name: Debug APK Paths
+      - name: List all APK files
         run: |
           echo "===== 所有APK文件 ====="
           find app/build/outputs -name "*.apk" -exec ls -la {} \;
@@ -47,12 +47,19 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/Han1meViewer-v*.apk
+          path: app/build/outputs/apk/debug/*.apk
           retention-days: 30
 
-      - name: Upload Release APK
+      - name: Upload Release APK (Obfuscated)
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
-          path: app/build/outputs/apk/release/Han1meViewer-release-v*.apk
+          name: app-release-obfuscated
+          path: app/build/outputs/apk/release/*.apk
+          retention-days: 30
+
+      - name: Upload Release APK (No Obfuscation)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-no-obfuscate
+          path: app/build/outputs/apk/releaseNoObfuscate/*.apk
           retention-days: 30
