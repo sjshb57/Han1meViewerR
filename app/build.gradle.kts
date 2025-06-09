@@ -29,7 +29,7 @@ android {
         projectDir, "ha1_github_token.txt"
     ).checkIfExists()?.readText().orEmpty()
 
-    val signConfig = if (isRelease) signingConfigs.create("release") {
+    var signConfig = if (isRelease) signingConfigs.create("release") {
         storeFile = File(projectDir, "keystore/Han1meViewerKeystore.jks").checkIfExists()
         storePassword = signPwd
         keyAlias = "night_star"
@@ -66,8 +66,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-        //    isShrinkResources = true
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )

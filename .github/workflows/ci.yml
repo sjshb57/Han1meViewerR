@@ -26,25 +26,18 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Validate Environment
+      - name: Prepare Keystore
+        if: env.STORE_FILE_BASE64 != ''
         run: |
-          if [ -n "$STORE_FILE_BASE64" ]; then
-            echo "$STORE_FILE_BASE64" | base64 -d > /dev/null 2>&1 || exit 1
-          fi
+          mkdir -p keystore
+          echo "$STORE_FILE_BASE64" | base64 -d > keystore/Han1meViewerKeystore.jks
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
         run: |
-          ./gradlew assembleDebug --stacktrace
-          
-          if [ -n "$STORE_FILE_BASE64" ] && \
-             [ -n "$STORE_PASSWORD" ] && \
-             [ -n "$KEY_ALIAS" ] && \
-             [ -n "$KEY_PASSWORD" ]; then
-            ./gradlew assembleRelease --stacktrace
-          fi
+          ./gradlew assembleDebug assembleRelease --stacktrace
 
       - name: Debug APK Paths
         run: |
@@ -55,11 +48,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/Han1meViewer-v*.apk
           retention-days: 30
 
       - name: Upload Release APK
-        if: success() && env.STORE_FILE_BASE64 != '' && env.STORE_PASSWORD != '' && env.KEY_ALIAS != '' && env.KEY_PASSWORD != ''
         uses: actions/upload-artifact@v4
         with:
           name: app-release
