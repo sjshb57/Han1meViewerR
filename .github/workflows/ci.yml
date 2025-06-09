@@ -33,6 +33,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Debug APK Paths
+        run: |
+          echo "===== 所有APK文件 ====="
+          find app/build/outputs -name "*.apk" -exec ls -la {} \;
+
       - name: Build and sign with Gradle
         run: |
           ./gradlew assembleDebug assembleRelease
