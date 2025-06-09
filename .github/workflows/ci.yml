@@ -43,7 +43,7 @@ jobs:
              [ -n "$STORE_PASSWORD" ] && \
              [ -n "$KEY_ALIAS" ] && \
              [ -n "$KEY_PASSWORD" ]; then
-            ./gradlew assembleRelease assembleReleaseNoObfuscate --stacktrace
+            ./gradlew assembleRelease --stacktrace
           fi
 
       - name: Debug APK Paths
@@ -63,13 +63,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/Han1meViewer-RELEASE-v*.apk
-          retention-days: 30
-
-      - name: Upload NoObfuscate APK
-        if: success() && env.STORE_FILE_BASE64 != '' && env.STORE_PASSWORD != '' && env.KEY_ALIAS != '' && env.KEY_PASSWORD != ''
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-no-obfuscate
-          path: app/build/outputs/apk/release/Han1meViewer-NOOBFUSCATE-v*.apk
+          path: app/build/outputs/apk/release/Han1meViewer-v*.apk
           retention-days: 30

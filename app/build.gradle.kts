@@ -66,30 +66,19 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+        //    isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             applicationVariants.all variant@{
                 this@variant.outputs.all output@{
                     val output = this@output as BaseVariantOutputImpl
-                    output.outputFileName = "Han1meViewer-RELEASE-v${defaultConfig.versionName}.apk"
+                    output.outputFileName = "Han1meViewer-v${defaultConfig.versionName}.apk"
                 }
             }
         }
 
-        create("releaseNoObfuscate") {
-            initWith(getByName("release"))
-            isMinifyEnabled = false
-            isShrinkResources = false
-            applicationVariants.all {
-                outputs.all {
-                    val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-                    output.outputFileName = "Han1meViewer-NOOBFUSCATE-v${defaultConfig.versionName}.apk"
-                }
-            }
-        }
         debug {
             isMinifyEnabled = false
             proguardFiles(
