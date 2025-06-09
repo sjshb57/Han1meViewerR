@@ -58,5 +58,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/app-release.apk
+          path: app/build/outputs/apk/release/Han1meViewer-RELEASE-v*.apk.apk
           retention-days: 30
+
+      - name: Upload NoObfuscate APK
+        if: success() && env.STORE_FILE_BASE64 != '' && env.STORE_PASSWORD != '' && env.KEY_ALIAS != '' && env.KEY_PASSWORD != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-no-obfuscate
+          path: app/build/outputs/apk/releaseNoObfuscate/Han1meViewer-NOOBFUSCATE-v*.apk

@@ -56,8 +56,12 @@ android {
 
         buildConfigField("int", "SEARCH_YEAR_RANGE_END", "${Config.thisYear}")
 
-        @Suppress("DEPRECATION")
-        resConfigs("zh","zh-rCN","zh-rTW","ja","ja-rJP")
+    //    @Suppress("DEPRECATION")
+    //    resConfigs("zh","zh-rCN","zh-rTW","ja","ja-rJP")
+    }
+
+    androidResources {
+        localeFilters += setOf("zh", "zh-CN", "zh-TW", "ja", "ja-JP")
     }
 
     buildTypes {
@@ -70,7 +74,7 @@ android {
             applicationVariants.all variant@{
                 this@variant.outputs.all output@{
                     val output = this@output as BaseVariantOutputImpl
-                    output.outputFileName = "Han1meViewer-v${defaultConfig.versionName}.apk"
+                    output.outputFileName = "Han1meViewer-RELEASE-v${defaultConfig.versionName}.apk"
                 }
             }
         }
@@ -82,7 +86,7 @@ android {
             applicationVariants.all {
                 outputs.all {
                     val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-                    output.outputFileName = "Han1meViewer-v${defaultConfig.versionName}R.apk"
+                    output.outputFileName = "Han1meViewer-NOOBFUSCATE-v${defaultConfig.versionName}.apk"
                 }
             }
         }
