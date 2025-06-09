@@ -2,7 +2,7 @@ name: Pull Request Check
 
 on:
   pull_request:
-    branches: [ "master" ]
+    branches: [ "feat/new_download" ]
     paths-ignore:
       - "**.md"
 

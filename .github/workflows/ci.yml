@@ -3,8 +3,6 @@ name: Android CI
 on:
   push:
     branches: [ feat/new_download ]
-  pull_request:
-    branches: [ feat/new_download ]
 
 jobs:
   build:
@@ -35,14 +33,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
+      - name: Build and sign with Gradle
         run: |
-          ./gradlew assembleDebug assembleRelease --stacktrace
-
-      - name: Debug APK Paths
-        run: |
-          echo "===== 所有APK文件 ====="
-          find app/build/outputs -name "*.apk" -exec ls -la {} \;
+          ./gradlew assembleDebug assembleRelease
 
       - name: Upload Debug APK
         uses: actions/upload-artifact@v4
@@ -55,5 +48,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-release
-          path: app/build/outputs/apk/release/Han1meViewer-v*.apk
+          path: app/build/outputs/apk/release/Han1meViewer-release-v*.apk
           retention-days: 30

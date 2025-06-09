@@ -73,8 +73,17 @@ abstract class DownloadDatabase : RoomDatabase() {
             db.execSQL(
                 """CREATE TABLE IF NOT EXISTS `HanimeCategoryCrossRef` (`videoId` INTEGER NOT NULL, `categoryId` INTEGER NOT NULL, PRIMARY KEY(`videoId`, `categoryId`))"""
             )
+            // Add coverUri column
             db.execSQL("""ALTER TABLE `HanimeDownloadEntity` ADD COLUMN `coverUri` TEXT NULL""")
+
+            // Add state column with default value (convert from isDownloading)
             db.execSQL("""ALTER TABLE `HanimeDownloadEntity` ADD COLUMN `state` INTEGER NOT NULL DEFAULT ${DownloadState.Mask.UNKNOWN}""")
+
+            // Update state values based on isDownloading
+            // If isDownloading=1, set state to DOWNLOADING (2)
+            // If isDownloading=0,
+            //                     if downloadedLength=length, set state to FINISHED (4)
+            //                     else set state to PAUSED (3)
             db.execSQL(
                 """UPDATE `HanimeDownloadEntity` SET `state` = 
                     |CASE WHEN `isDownloading` = 1 THEN ${DownloadState.Mask.DOWNLOADING} ELSE 

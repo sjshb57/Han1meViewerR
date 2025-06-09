@@ -1,9 +1,7 @@
 package com.yenaly.han1meviewer.ui.fragment.search
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Checkable
@@ -101,7 +99,7 @@ class SearchOptionsPopupFragment :
                         }
                     })
                 }
-            return XPopup.Builder(requireContext()).setOptionsCheckedCallback("release_dates")
+            return XPopup.Builder(requireContext()).setOptionsCheckedCallback()
                 .borderRadius(POP_UP_BORDER_RADIUS)
                 .isDarkTheme(true)
                 .asCustom(popup) as TimePickerPopup
@@ -136,8 +134,7 @@ class SearchOptionsPopupFragment :
                 if (genres == null) {
                     genres = viewModel.genres.mapToArray { it.value }
                 }
-                requireContext().showAlertDialog(DialogInterface.OnDismissListener {
-                    // Removed Firebase logging
+                requireContext().showAlertDialog({
                 }) {
                     val index = viewModel.genres.indexOfFirst {
                         it.searchKey == viewModel.genre
@@ -188,6 +185,7 @@ class SearchOptionsPopupFragment :
                 return@lc true
             }
         }
+
         binding.tag.apply {
             setOnClickListener {
                 HMultiChoicesDialog(context, R.string.tag).apply {
@@ -228,9 +226,6 @@ class SearchOptionsPopupFragment :
                         clearAllChecks()
                         initOptionsChecked()
                     }
-                    setOnDismissListener {
-                        // Removed Firebase logging
-                    }
                 }.show()
             }
             setOnLongClickListener lc@{
@@ -241,13 +236,13 @@ class SearchOptionsPopupFragment :
                 return@lc true
             }
         }
+
         binding.sortOption.apply {
             setOnClickListener {
                 if (sortOptions == null) {
                     sortOptions = viewModel.sortOptions.mapToArray { it.value }
                 }
-                requireContext().showAlertDialog(DialogInterface.OnDismissListener {
-                    // Removed Firebase logging
+                requireContext().showAlertDialog({
                 }) {
                     val index = viewModel.sortOptions.indexOfFirst {
                         it.searchKey == viewModel.sort
@@ -278,7 +273,7 @@ class SearchOptionsPopupFragment :
                 if (durations == null) {
                     durations = viewModel.durations.mapToArray { it.value }
                 }
-                requireContext().showAlertDialog(DialogInterface.OnDismissListener {
+                requireContext().showAlertDialog({
                     initOptionsChecked()
                 }) {
                     val index = viewModel.durations.indexOfFirst {
@@ -372,14 +367,10 @@ class SearchOptionsPopupFragment :
         }
     }
 
-    private fun XPopup.Builder.setOptionsCheckedCallback(type: String) = apply {
+    private fun XPopup.Builder.setOptionsCheckedCallback() = apply {
         setPopupCallback(object : SimpleCallback() {
             override fun beforeDismiss(popupView: BasePopupView?) {
                 initOptionsChecked()
-            }
-
-            override fun onDismiss(popupView: BasePopupView?) {
-                // Removed Firebase logging
             }
         })
     }

@@ -212,13 +212,20 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
         }
     }
 
+    /**
+     * 竖屏并退出全屏
+     */
     private fun changeScreenNormal() {
         if (binding.videoPlayer.screen == Jzvd.SCREEN_FULLSCREEN) {
             binding.videoPlayer.gotoNormalScreen()
         }
     }
 
+    /**
+     * 横屏
+     */
     private fun changeScreenFullLandscape(orientation: OrientationManager.ScreenOrientation) {
+        //从竖屏状态进入横屏
         if (binding.videoPlayer.screen != Jzvd.SCREEN_FULLSCREEN) {
             if (System.currentTimeMillis() - Jzvd.lastAutoFullscreenTime > 2000) {
                 binding.videoPlayer.autoFullscreen(orientation)
@@ -244,6 +251,7 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
 
     private fun initHKeyframe() {
         binding.videoPlayer.onGoHomeClickListener = { _ ->
+            // singleTask 直接把所有 VideoActivity 都 finish 掉
             startActivity<MainActivity>()
         }
         binding.videoPlayer.onKeyframeClickListener = { v ->
@@ -265,7 +273,7 @@ class VideoActivity : YenalyActivity<ActivityVideoBinding>(),
                             videoTitle ?: "Untitled",
                             HKeyframeEntity.Keyframe(
                                 position = currentPosition,
-                                prompt = null
+                                prompt = null // 這裏不要給太多負擔，保存就行了沒必要寫comment
                             )
                         )
                     }

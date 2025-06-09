@@ -29,7 +29,7 @@ android {
         projectDir, "ha1_github_token.txt"
     ).checkIfExists()?.readText().orEmpty()
 
-    var signConfig = if (isRelease) signingConfigs.create("release") {
+    val signConfig = if (isRelease) signingConfigs.create("release") {
         storeFile = File(projectDir, "keystore/Han1meViewerKeystore.jks").checkIfExists()
         storePassword = signPwd
         keyAlias = "night_star"
@@ -74,9 +74,26 @@ android {
             applicationVariants.all variant@{
                 this@variant.outputs.all output@{
                     val output = this@output as BaseVariantOutputImpl
-                    output.outputFileName = "Han1meViewer-v${defaultConfig.versionName}.apk"
+                    output.outputFileName = "Han1meViewer-release-v${defaultConfig.versionName}.apk"
                 }
             }
+        }
+
+        create("releaseNoObfuscate") {
+            initWith(getByName("release"))
+            isMinifyEnabled = false
+            isShrinkResources = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "proguard-rules.pro"
+            )
+            applicationVariants.all {
+                outputs.all {
+                    val output = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+                    output.outputFileName = "Han1meViewer-releaseNoObfuscate-v${defaultConfig.versionName}.apk"
+                }
+            }
+            matchingFallbacks += listOf("release")
         }
 
         debug {

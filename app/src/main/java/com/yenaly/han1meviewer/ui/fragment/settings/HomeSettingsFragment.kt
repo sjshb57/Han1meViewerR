@@ -114,11 +114,14 @@ class HomeSettingsFragment : YenalySettingsFragment(R.xml.settings_home),
 
     override fun onPreferencesCreated(savedInstanceState: Bundle?) {
         videoLanguage.apply {
+
+            // 從 xml 轉移至此
             entries = arrayOf(
                 getString(R.string.traditional_chinese),
                 getString(R.string.simplified_chinese)
             )
             entryValues = arrayOf("zh-CHT", "zh-CHS")
+            // 不能直接用 defaultValue 设置，没效果
             if (value == null) setValueIndex(0)
 
             setOnPreferenceChangeListener { _, newValue ->
@@ -234,7 +237,6 @@ class HomeSettingsFragment : YenalySettingsFragment(R.xml.settings_home),
         }
         useAnalytics.apply {
             setOnPreferenceChangeListener { _, newValue ->
-                // Removed Firebase analytics collection
                 return@setOnPreferenceChangeListener true
             }
             setOnPreferenceLongClickListener {
@@ -293,12 +295,15 @@ class HomeSettingsFragment : YenalySettingsFragment(R.xml.settings_home),
         }
     }
 
+    // #issue-124: Support deep links.
     @RequiresApi(Build.VERSION_CODES.S)
     private fun showApplyDeepLinksDialog(context: Context) {
         context.showAlertDialog {
             setTitle(R.string.apply_deep_links)
             setView(R.layout.dialog_apply_deep_links)
             setPositiveButton(R.string.go_to_settings) { _, _ ->
+                // #issue-197: 有些手机不支持直接从应用里跳转到深层链接界面
+                // 这个权限是一个系统级权限，所以没办法，不支持的手机只能自己找地方开了。
                 try {
                     val intent = Intent().apply {
                         action = Settings.ACTION_APP_OPEN_BY_DEFAULT_SETTINGS
@@ -309,6 +314,7 @@ class HomeSettingsFragment : YenalySettingsFragment(R.xml.settings_home),
                     }
                     requireActivity().startActivity(intent)
                 } catch (e: Exception) {
+                    // 竟然还有手机不支持打开的
                     showShortToast(R.string.action_app_open_by_default_settings_not_support)
                     e.printStackTrace()
                 }
@@ -330,6 +336,13 @@ class HomeSettingsFragment : YenalySettingsFragment(R.xml.settings_home),
 
     private fun generateClearCacheSummary(size: Long): CharSequence {
         return getString(R.string.cache_usage_summary, size.formatFileSizeV2()).parseAsHtml()
+//        return spannable {
+//            size.formatFileSizeV2().span {
+//                style(Typeface.BOLD)
+//            }
+//            " ".text()
+//            getString(R.string.cache_occupy).text()
+//        }
     }
 
     private fun toIntervalDaysPrettyString(value: Int): String {
