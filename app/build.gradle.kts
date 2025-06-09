@@ -56,13 +56,13 @@ android {
 
         buildConfigField("int", "SEARCH_YEAR_RANGE_END", "${Config.thisYear}")
 
-    //    @Suppress("DEPRECATION")
-    //    resConfigs("zh","zh-rCN","zh-rTW","ja","ja-rJP")
+        @Suppress("DEPRECATION")
+        resConfigs("zh","zh-rCN","zh-rTW","ja","ja-rJP")
     }
 
-    androidResources {
-        localeFilters += setOf("zh", "zh-CN", "zh-TW", "ja", "ja-JP")
-    }
+//    androidResources {
+//        localeFilters += setOf("zh", "zh-rCN", "zh-rTW", "ja", "ja-rJP")
+//    }
 
     buildTypes {
         release {
