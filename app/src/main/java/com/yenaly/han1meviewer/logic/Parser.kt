@@ -697,7 +697,7 @@ object Parser {
 
         buildList {
             allCommentsClass?.children()?.chunked(5)?.forEach { elements ->
-                this += Element("div").apply { appendChildren(elements) }
+                add(Element("div").apply { appendChildren(elements) })
             }
         }.forEach { child: Element ->
             val avatarUrl = child.selectFirst("img")?.absUrl("src")
