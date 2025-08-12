@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.yenaly.han1meviewer.debug" />
-                  <option name="mobileSdkAppId" value="1:713839264129:android:f7ff12857c3c14f3e4e880" />
-                  <option name="projectId" value="han1meviewer" />
-                  <option name="projectNumber" value="713839264129" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
